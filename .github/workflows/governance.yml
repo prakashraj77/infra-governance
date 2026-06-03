@@ -1,0 +1,33 @@
+name: Terraform Governance
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  governance:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: hashicorp/setup-terraform@v3
+
+      - name: Terraform Init
+        run: terraform -chdir=terraform init
+
+      - name: Terraform Plan
+        run: |
+          terraform -chdir=terraform plan -out=tfplan
+          terraform -chdir=terraform show -json tfplan > plan.json
+
+      - name: Install Conftest
+        run: |
+          wget https://github.com/open-policy-agent/conftest/releases/download/v0.54.0/conftest_0.54.0_Linux_x86_64.tar.gz
+          tar xzf conftest_0.54.0_Linux_x86_64.tar.gz
+          sudo mv conftest /usr/local/bin
+
+      - name: Policy Check
+        run: |
+          conftest test terraform/plan.json --policy policy
