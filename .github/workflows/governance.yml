@@ -8,11 +8,20 @@ on:
 jobs:
   governance:
     runs-on: ubuntu-latest
+    permissions:                        # ADD THIS BLOCK
+      id-token: write
+      contents: read
 
     steps:
       - uses: actions/checkout@v4
 
       - uses: hashicorp/setup-terraform@v3
+
+      - name: Configure AWS Credentials  # ADD THIS ENTIRE STEP
+        uses: aws-actions/configure-aws-credentials@v4
+        with:
+          role-to-assume: arn:aws:iam::799997637318:role/arn:aws:iam::799997637318:role/githubactionsrole
+          aws-region: ap-south-1
 
       - name: Terraform Init
         run: terraform init
@@ -29,5 +38,4 @@ jobs:
           sudo mv conftest /usr/local/bin
 
       - name: Policy Check
-        run: |
-          conftest test plan.json --policy policy
+        ...
