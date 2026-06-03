@@ -38,4 +38,4 @@ jobs:
           sudo mv conftest /usr/local/bin
 
       - name: Policy Check
-        ...
+        
