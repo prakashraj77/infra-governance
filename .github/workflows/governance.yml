@@ -15,12 +15,12 @@ jobs:
       - uses: hashicorp/setup-terraform@v3
 
       - name: Terraform Init
-        run: terraform -chdir=terraform init
+        run: terraform init
 
       - name: Terraform Plan
         run: |
-          terraform -chdir=terraform plan -out=tfplan
-          terraform -chdir=terraform show -json tfplan > plan.json
+          terraform plan -out=tfplan
+          terraform show -json tfplan > plan.json
 
       - name: Install Conftest
         run: |
@@ -30,4 +30,4 @@ jobs:
 
       - name: Policy Check
         run: |
-          conftest test terraform/plan.json --policy policy
+          conftest test plan.json --policy policy
