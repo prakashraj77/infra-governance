@@ -28,7 +28,7 @@ jobs:
 
       - name: Terraform Plan
         run: |
-          terraform plan -out=tfplan
+          terraform plan -out=tfplan -var="environment=dev"
           terraform show -json tfplan > plan.json
 
       - name: Install Conftest
